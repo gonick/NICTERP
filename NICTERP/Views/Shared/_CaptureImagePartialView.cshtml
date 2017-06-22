@@ -1,0 +1,81 @@
+﻿
+<div class="container">
+
+    <script>
+        var canvas, context, video, videoObj, test;
+
+        $(function () {
+            canvas = document.getElementById("canvas");
+            context = canvas.getContext("2d");
+            video = document.getElementById("video");
+
+            // different browsers provide getUserMedia() in differnt ways, so we need to consolidate
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+            if (navigator.getUserMedia) {
+                navigator.getUserMedia(
+                   { video: true }, // which media
+                   function (stream) {   // success function
+                       video.src = window.URL.createObjectURL(stream);
+                       video.onloadedmetadata = function (e) {
+                           video.play();
+                           test = stream;
+                       };
+                   },
+                   function (err) {  // error function
+                       console.log("The following error occured: " + err.name);
+                   }
+              );
+            }
+            else {
+                console.log("getUserMedia not supported");
+            }
+        });
+
+        function takePhoto() {
+            context.drawImage(video, 0, 0, 400, 300);
+        }
+
+        function savePhoto() {
+            var data = canvas.toDataURL();
+            data = data.replace(/^data:image\/(png|jpg);base64,/, "");
+            var title = $("#title").val();
+
+            $.ajax({
+                type: "POST",
+                url: "savephoto",
+                data: {
+                    photo: data,
+                    title: title
+                }
+            }).done(function (o) {
+                debugger;
+                if (o != null || o != "") {
+                    $(".img-thumbnail").attr("src", o);
+                    $("#imgUrl").val(o);
+                    $(".img-thumbnail").load();
+                    $('.modal').modal('hide');
+                    test.stop();
+                    var successMsg = '<div class="alert alert-success fade in"> <a href="#" class="close" data-dismiss="alert">&times;</a>' +
+    '<strong>Success!</strong> Your message has been sent successfully. &nbsp;</div>';
+                    $("#noti").html(successMsg);
+                }
+                else {
+                    var errorMsg = '<div class="alert alert-warning alert-dismissible" role="alert">' +
+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+'<strong>Oops!</strong> Error Saving Pic. &nbsp;</div>'
+                    $("#noti").html(errorMsg);
+                }
+            });
+
+
+        }
+    </script>
+    <video id="video" width="400" height="300" autoplay></video>
+    <span id="snap" onclick="takePhoto()" class="btn btn-default">Snap</span>
+    <canvas id="canvas" width="400" height="300"></canvas>
+
+
+
+
+</div>

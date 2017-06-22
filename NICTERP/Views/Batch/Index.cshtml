@@ -1,0 +1,57 @@
+﻿@model IEnumerable<NICTERP.Models.NICT.Batch>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Batches</h2>
+
+<p>
+    @Html.ActionLink("Create New Batch", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.BatchName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </th>
+        <th>
+            Created By
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.From)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.To)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.BatchName)
+        </td>
+        <td>
+            @item.DateCreated.ToLongDateString()
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedBy)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.From)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.To)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Add Students", "AddStudent", new { id=item.id }) |
+            @Html.ActionLink("Delete", "Disable", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>

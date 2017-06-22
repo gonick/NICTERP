@@ -1,0 +1,55 @@
+﻿@model IEnumerable<NICTERP.Models.NICT.BatchMember>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Student.Reg_No)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Student.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Student.Contact_No)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Student.Date_Of_Joining)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    <tr data-reg="@(item.Student.CenterName.Code)-@(item.Student.Reg_No)">
+        <td>
+            @(item.Student.CenterName.Code)-@(item.Student.Reg_No)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Student.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Student.Contact_No)
+        </td>
+        <td>
+            @item.Student.Date_Of_Joining.ToLongDateString()
+        </td>
+        <td>
+            @Html.ActionLink("Details", "Details", "AdmissionForms", new { id = item.Student.AdmissionForm.Form_No }, htmlAttributes: new { @target="_blank"}) |
+            <a href="/Batch/DeleteMember" data-id="@item.id" onclick="deleteMember(event)">Delete</a>
+        </td>
+    </tr>
+}
+
+</table>
+<script>
+    function deleteMember(e)
+    {
+        debugger;
+        e.preventDefault();
+        var url = $(e.target).attr("href");
+        var id = $(e.target).attr("data-id");
+        $.post(url, { id: id }, function (data) {
+            if (data)
+                loadBatchMembers();
+        });
+    }
+</script>

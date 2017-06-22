@@ -1,0 +1,46 @@
+﻿@using NICTERP.Models.NICT
+@model IEnumerable<NICTERP.Models.NICT.StudentDetail>
+<table class="table table-responsive">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Reg_No)
+        </th>
+        <th>
+           Form No.
+        </th>
+        <th>
+            Student's Name
+        </th>
+        <th>
+            Batch Allotted
+        </th>
+        <th>
+           &nbsp;
+        </th>
+    </tr>
+
+@foreach (StudentDetail item in Model) {
+    <tr>
+        <td>
+            @(item.CenterName.Code)-@Html.DisplayFor(modelItem => item.Reg_No)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Form_No)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+           batchAllotted
+        </td>
+        <td>
+            @Html.ActionLink("View", "Details", "AdmissionForms", new { @id = item.Form_No }, htmlAttributes: new {@target="_blank"})
+        </td>
+    </tr>
+}
+
+</table>
+<script>
+        var count=@ViewBag.Count;
+        $("#AdmissionFormsCount").text(count);
+</script>

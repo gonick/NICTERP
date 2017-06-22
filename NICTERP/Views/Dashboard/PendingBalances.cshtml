@@ -1,0 +1,47 @@
+﻿@model IEnumerable<NICTERP.Models.View_Models.PendingBalances>
+@using NICTERP.Models.View_Models;
+<table class="table table-responsive">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.StudentDetail.Reg_No)
+        </th>
+        <th>
+            Student's Name
+        </th>
+        <th>
+            Balance Due
+        </th>
+        <th>
+            Due Date
+        </th>
+        <th>
+            &nbsp;
+        </th>
+    </tr>
+
+    @foreach (PendingBalances item in Model)
+    {
+        <tr>
+            <td>
+                @(item.StudentDetail.CenterName.Code)-@Html.DisplayFor(modelItem => item.StudentDetail.Reg_No)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudentDetail.Name)
+            </td>
+            <td>
+                <i class="fa fa-rupee" style="color:#2CC185;">&nbsp;</i>@Html.DisplayFor(modelItem => item.Installment.Balance_Due)
+            </td>
+            <td>
+                @(item.Installment.Duedate.HasValue ? Convert.ToDateTime(item.Installment.Duedate).ToLongDateString() : "N.A")
+            </td>
+            <td>
+                View
+            </td>
+        </tr>
+    }
+
+</table>
+<script>
+    var pendingBalancesCount=@ViewBag.Count;
+    $("#BalanceDueCount").text(pendingBalancesCount);
+</script>

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<NICTERP.Models.NICT.AdmissionForm>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model=>model.Form_No)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Form_Complete)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Dated)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem=>item.Form_No)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Form_Complete)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Dated.ToLongDateString())
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Form_No }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Form_No }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Form_No })
+        </td>
+    </tr>
+}
+
+</table>

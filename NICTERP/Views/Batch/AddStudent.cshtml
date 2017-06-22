@@ -1,0 +1,166 @@
+﻿@model NICTERP.Models.NICT.BatchMember
+
+@{
+    ViewBag.Title = "Add Student";
+}
+<style>
+    #TableHeader td {
+        padding:0;
+    }
+    #TableHeader {
+        margin:0;
+    }
+</style>
+<link href="~/Content/jquery.auto-complete.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.auto-complete.js"></script>
+<br />
+<div style="border:1px solid #eee;" class="row">
+    <div class="col-md-12" style="padding:0">
+        <table id="TableHeader" class="table">
+            <tr>
+                <td style="width:70px">
+                    <label class="label-info" style="color:white;padding:10px;margin-bottom:0;font-size:17px;">Batch</label>
+                </td>
+                <td style="text-align:center;vertical-align:middle">
+                    <strong>@ViewBag.Batch.BatchName</strong>
+                </td>
+                <td style="width:225px">
+                    <label class="label-info" style="color:white;padding:10px;margin-bottom:0;font-size:17px;float:right"><i class="fa fa-clock-o"></i> @ViewBag.Batch.From to @ViewBag.Batch.To</label>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Add Student</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row form-group">
+            <div class="col-xs-12 fa">
+                <input type="text" class="form-control" placeholder="&#xf002; Search Student" id="search" style="max-width:100%!important" />
+            </div>
+        </div>
+        <div class="row">
+            <div id="listOfBatchMembers" class="col-xs-12" style="display:table">
+
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <div class="col-md-3">
+                <input type="submit" value="Add" onclick="AddMembers(event)" class="btn btn-primary" />
+            </div>
+            <div id="notification" class="col-md-9">
+
+            </div>
+        </div>
+    </div>
+}
+
+<div id="BatchMembersRow" class="row">
+    <div class="col-md-12" style="padding:0">
+        <h3>Batch Members</h3>
+        <div id="BatchMembers" style="padding:0" class="col-md-12">
+
+        </div>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+<style>
+    #BatchMembersRow h3 {
+        background-color: #2CC185;
+        color: white;
+        text-align: center;
+        box-shadow: 0px 4px 5px 0px #eee;
+        padding: 6px;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    #BatchMembersRow {
+        border-bottom: 1px solid #f0f0f0;
+        border-right: 1px solid #f0f0f0;
+        border-left: 1px solid #f0f0f0;
+        box-shadow: 0px 0px 8px 0px #eee;
+    }
+
+    strong i {
+        font-size: 1.3em !important;
+        /*color:#2CC185;*/
+        color: #5bc0de;
+    }
+
+    .fa-trash-o {
+        color: red !important;
+        cursor: pointer;
+    }
+</style>
+<script>
+    $('input[type="text"]').autoComplete({
+        minChars: 1,
+        source: function (term, suggest) {
+            var suggestions = [];
+            try { xhr.abort(); } catch (e) { }
+            xhr = $.getJSON('/AdmissionForms/searchStudent', { name: term, batchId: batchid }, function (data) {
+                data = JSON.parse(data);
+                suggest(data);
+            });
+        },
+        renderItem: function (item, search) {
+            var re = new RegExp("(" + search.split(' ').join('|') + ")", "gi"); debugger;
+            var reg=item.CenterName.Code+"-"+item.Reg_No;
+            var date = new Date(item.Date_Of_Joining).toDateString();
+            $(".autocomplete-suggestions").css({ 'display': 'table', 'padding': '6px' });
+            return '<div class="autocomplete-suggestion table-row" data-id='+item.id+' data-reg=' + reg + '><strong class="table-cell" title="Registration No."><i class="fa fa-shield"></i> ' + reg + '</strong><strong class="table-cell" title="Name"><i class="fa fa-user"></i> ' + item.Name + '</strong><strong class="table-cell" title="Contact No."><i class="fa fa-phone"></i> ' + item.Contact_No + '</strong><strong class="table-cell" title="Date Of Joining"><i class="fa fa-calendar"></i> ' + date + '</strong></div></div>';
+        },
+        onSelect: function (event, term, item) {
+            var flag=false;
+            $("#listOfBatchMembers .autocomplete-suggestion, #BatchMembers tr").each(function (i, element) {
+                if ($(element).attr("data-reg") == $(item).attr("data-reg"))
+                    flag = true;
+                //$(element).append("<button class='table-cell' onclick='deleteRow(this)'><i class='fa fa-delete'></i></button>");
+            });
+            if (!flag) {
+                item.append("<strong class='table-cell' onclick='deleteRow(this)'><i class='fa fa-trash-o' title='Delete'></i></strong>");
+                $("#listOfBatchMembers").append(item);
+            }
+        }
+    });
+    function deleteRow(e)
+    {
+        var reg = $(e).parent().attr("data-reg");
+        $("#listOfBatchMembers .autocomplete-suggestion[data-reg='" + reg + "']").remove();
+    }
+    var batchid=@ViewBag.Batch.id;
+    function AddMembers(e)
+    {
+        e.preventDefault();
+        var studentIds = [];
+        $("#listOfBatchMembers .autocomplete-suggestion").each(function (i, e) {
+            studentIds.push($(e).attr("data-id"));
+        });
+        $.post("/Batch/AddStudentAsync",{studentIds:studentIds,BatchId:batchid},function(data){
+            data=JSON.parse(data);
+            if(data.success){
+                loadBatchMembers();
+                $("#listOfBatchMembers").html("");
+                $("#notification").html("<div class='alert alert-success'><a href='' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>Success !</strong> Record added</div>");
+            }
+           
+        });
+    }
+    function loadBatchMembers(){
+        $.get("/Batch/BatchMembers",{id:batchid},function(data){
+            $("#BatchMembers").html(data);
+        });
+    }
+    loadBatchMembers();
+</script>

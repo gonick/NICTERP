@@ -1,0 +1,269 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<br /><br />
+<link rel="stylesheet" type="text/css" href="~/Content/TabStylesInspiration/css/tabs.css" />
+<link rel="stylesheet" type="text/css" href="~/Content/TabStylesInspiration/css/tabstyles.css" />
+<link href="~/Content/Style.css" rel="stylesheet" />
+<style>
+    a {
+        color: #2CC185;
+    }
+
+        a:hover {
+            color: #74777b;
+            text-decoration: none;
+        }
+
+        a:active {
+            text-decoration: none;
+        }
+
+    body {
+        background-color: #eee;
+    }
+
+    .box {
+        min-height: 300px;
+        border: 1px solid #ddd;
+        display: inline-block;
+        background-color: white;
+        margin-bottom: 15px;
+        position: relative;
+    }
+
+    .header {
+        color: white;
+        background-color: #2CC185;
+        box-shadow: 0 4px 8px 1px #ddd;
+    }
+
+    .badge {
+        color: #2CC185;
+        background-color: white;
+    }
+
+    .thumbnail {
+        background-image: url("../../Content/Images/Photo 7-2-15 4-21-35 PM.png");
+        width: 106px;
+        height: 80px;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    td:last-child {
+        width: 102px;
+    }
+
+    #tabIncompleteFormsTable tbody td {
+        vertical-align: inherit;
+        text-align: left;
+    }
+     #tabPendingBalancesTable tbody td {
+        vertical-align: inherit;
+        text-align: left;
+    }
+    .fa-rupee {
+        color: #2CC185;
+    }
+</style>
+<section>
+    <div class="tabs tabs-style-underline" style="color:#ddd;font-family:Helvetica">
+        <nav style="font-size:1.1em;">
+            <ul>
+                <li><a href="#section-underline-1" class="icon icon-home" onclick="Overview()"><span>Overview</span></a></li>
+                <li><a href="#section-underline-2" class="icon icon-box" onclick="IncompleteForms()"><span>Incomplete Forms</span></a></li>
+                <li><a href="#section-underline-3" class="icon icon-date" onclick="PendingBalances()"><span>Pending Balances</span></a></li>
+                <li><a href="#section-underline-4" class="icon icon-display"><span>Certificates</span></a></li>
+                <li><a href="#section-underline-5" class="icon icon-config"><span>Director's Notice</span></a></li>
+            </ul>
+        </nav>
+        <div class="content-wrap">
+            <section id="section-underline-1" style="padding-left:0;padding-right:15px;font-size:14px">
+                <div class="row">
+                    <div id="AdmissionForms" class="box col-md-12" style="float:left">
+                        <div class="row header">
+                            <div class="col-xs-12">
+                                <h4>Admission Forms <span id="AdmissionFormsCount" class="badge" style="float:right;"></span></h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="data col-md-12" style="color:black;text-align:left;padding-right:1px">
+
+                            </div>
+                            <div id="loader" role="loader" style="width:100%;height:100%;position:absolute;top:0;  left: 0;align-items: center;display: flex;background-color:rgba(0,0,0,0.3);visibility:hidden">
+                                <img src="~/Content/Images/Preloader.gif" style="margin:auto" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="Installments" class="box col-md-12" style="float:right">
+                        <div class="row header">
+                            <div class="col-xs-12">
+                                <h4>Balance Due <span id="BalanceDueCount" class="badge" style="float:right;"></span></h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="BalanceDueDiv" class="data col-md-12" style="color:black;text-align:left;">
+
+                            </div>
+                            <div id="loader" role="loader" style="width:100%;height:100%;position:absolute;top:0;  left: 0;align-items: center;display: flex;background-color:rgba(0,0,0,0.3);visibility:hidden">
+                                <img src="~/Content/Images/Preloader.gif" style="margin:auto" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="box" style="float:left">
+                        <div>
+                            @*<div id="loader" role="loader" style="width:100%;height:100%;position:absolute;top:0;  left: 0;align-items: center;display: flex;background-color:rgba(0,0,0,0.3);visibility:hidden">
+                                    <img src="~/Content/Images/Preloader.gif" style="margin:auto" />
+                                </div>*@
+                        </div>
+                    </div>
+                    <div class="box" style="float:right">
+                        <div>
+                            @*<div id="loader" role="loader" style="width:100%;height:100%;position:absolute;top:0;  left: 0;align-items: center;display: flex;background-color:rgba(0,0,0,0.3);visibility:hidden">
+                                    <img src="~/Content/Images/Preloader.gif" style="margin:auto" />
+                                </div>*@
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="section-underline-2" style="font-size:14px">
+                <div class="row" style="margin-right: -12px; box-shadow: 0px 0px 10px 1px #ddd; margin-left: -12px;">
+                    <div class="col-xs-12" style="min-height: 500px;background-color:white;padding:0">
+                        <div class="row header">
+                            <div class="col-xs-12">
+                                <h4>Incomplete Forms <span id="AdmissionFormsCount" class="badge" style="float:right;"></span></h4>
+                            </div>
+                        </div>
+                        <table id="tabIncompleteFormsTable" class="table table-responsive table-hover" style="color:#74777b">
+                            <thead>
+                                <tr>
+                                    <th>Reg No.</th>
+                                    <th>Form No.</th>
+                                    <th>Student's Name</th>
+                                    <th>Batch Allotted</th>
+                                    <th>Contact No.</th>
+                                    <th>Course Applied</th>
+                                    <th>Date of Joining</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div id="loader" role="loader" style="width:100%;height:100%;position:absolute;top:0;  left: 0;align-items: center;display: flex;background-color:rgba(0,0,0,0.3);visibility:hidden">
+                            <img src="~/Content/Images/Preloader.gif" style="margin:auto" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="section-underline-3" style="font-size:14px">
+                <div class="row" style="margin-right: -12px; box-shadow: 0px 0px 10px 1px #ddd; margin-left: -12px;">
+                    <div class="col-xs-12" style="min-height: 500px;background-color:white;padding:0">
+                        <div class="row header">
+                            <div class="col-xs-12">
+                                <h4>Pending Balances</h4>
+                            </div>
+                        </div>
+                        <table id="tabPendingBalancesTable" class="table table-responsive table-hover" style="color:#74777b">
+                            <thead>
+                                <tr>
+                                    <th>Reg No.</th>
+                                    <th>Student's Name</th>
+                                    <th>Balance Due</th>
+                                    <th>Due Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div id="loader" role="loader" style="width:100%;height:100%;position:absolute;top:0;  left: 0;align-items: center;display: flex;background-color:rgba(0,0,0,0.3);visibility:hidden">
+                            <img src="~/Content/Images/Preloader.gif" style="margin:auto" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="section-underline-4"><p></p></section>
+            <section id="section-underline-5"><p></p></section>
+        </div><!-- /content -->
+    </div><!-- /tabs -->
+</section>
+<script src="~/Content/TabStylesInspiration/js/cbpFWTabs.js"></script>
+<script>
+    (function () {
+
+        [].slice.call(document.querySelectorAll('.tabs')).forEach(function (el) {
+            new CBPFWTabs(el);
+        });
+    })();
+</script>
+
+<script>
+    function Overview() {
+        $("#section-underline-1 [role='loader']").css("visibility", "visible");
+        $.get("/Dashboard/IncompleteForms", null, function (data) {
+            $("#AdmissionForms .data").html(data);
+            $("#AdmissionForms #loader").css("visibility", "hidden");
+        });
+        $.get("/Dashboard/PendingBalances", null, function (data) {
+            $("#Installments .data").html(data);
+            $("#Installments #loader").css("visibility", "hidden");
+        });
+    }
+    function IncompleteForms() {
+        var source = new EventSource("/Dashboard/TabIncompleteForms");
+        source.onmessage = function (event) {
+            $("#section-underline-2 [role='loader']").css("visibility", "visible");
+            $("#tabIncompleteFormsTable tbody").html("");
+            var data = JSON.parse(event.data);
+            if (data != "") {
+                $.each(data, function (i, val) {
+                    var row = "<tr>";
+                    row += "<td>" + val.CenterName.Code + "-" + +val.Reg_No + "</td>";
+                    row += "<td>" + val.Form_No + "</td>";
+                    row += "<td>" + val.Name + "</td>";
+                    row += "<td>" + null + "</td>";
+                    row += "<td>" + val.Contact_No + "</td>";
+                    row += "<td>" + val.Course_Applied + "</td>";
+                    row += "<td>" + new Date(val.Date_Of_Joining).toDateString() + "</td>";
+                    row += "<td><div class='thumbnail' style='background-image:url(\"../" + val.Photo + "\")'></div></td>";
+                    row += "</tr>";
+                    $("#tabIncompleteFormsTable tbody").append(row);
+                });
+            }
+            else { $("#tabIncompleteFormsTable tbody").html("<tr><td colspan='7'><h4 style='color:#ddd;text-align:center'>No Pending Balances</h4></td></tr>"); }
+            $("#section-underline-2 [role='loader']").css("visibility", "hidden");
+        };
+    }
+    function PendingBalances() {
+        var source = new EventSource("/Dashboard/TabPendingBalances");
+        source.onmessage = function (event) {
+            $("#section-underline-3 [role='loader']").css("visibility", "visible");
+            $("#tabPendingBalancesTable tbody").html("");
+            var data = JSON.parse(event.data);
+            if (data != "") {
+                $.each(data, function (i, val) {
+                    var row = "<tr>";
+                    row += "<td>" + val.StudentDetail.CenterName.Code + "-" + +val.StudentDetail.Reg_No + "</td>";
+                    row += "<td>" + val.StudentDetail.Name + "</td>";
+                    row += "<td><i class='fa fa-rupee'></i> " + val.Installment.Balance_Due + "</td>";
+                    var dt = null;
+                    if (val.Installment.Duedate != null)
+                        dt = new Date(val.Installment.Duedate).toDateString();
+                    row += "<td>" + dt + "</td>";
+                    row += "<td>view</td>";
+                    row += "</tr>";
+                    $("#tabPendingBalancesTable tbody").append(row);
+                });
+            }
+            else { $("#tabPendingBalancesTable tbody").html("<tr><td colspan='5'><h4 style='color:#ddd;text-align:center'>No Pending Balances</h4></td></tr>"); }
+            $("#section-underline-3 [role='loader']").css("visibility", "hidden");
+        }
+
+    }
+    window.onload = Overview();
+</script>

@@ -1,0 +1,39 @@
+﻿@model IEnumerable<NICTERP.Models.NICT.Installment>
+
+@*<p>
+    @Html.ActionLink("Create New", "Create")
+</p>*@
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Amount_Paid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Balance_Due)
+        </th>
+        <th>
+            Dated
+        </th>
+        @*<th></th>*@
+    </tr>
+
+@foreach (var item in Model) {
+    <tr id="@item.Id" class="text-left">
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount_Paid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Balance_Due)
+        </td>
+        <td>
+            @item.Datetime.Date.AddHours(5).AddMinutes(30).ToLongDateString()
+        </td>
+        @*<td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>*@
+    </tr>
+}
+
+</table>
